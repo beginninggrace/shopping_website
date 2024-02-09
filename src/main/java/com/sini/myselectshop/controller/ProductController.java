@@ -7,6 +7,8 @@ import com.sini.myselectshop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -23,4 +25,10 @@ public class ProductController {
     public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody ProductMypriceRequestDto requestDto) {
         return productService.updateProduct(id, requestDto);
     }
+
+    @GetMapping("/products")
+    public List<ProductResponseDto> getProducts() { // 그냥 조회하는 거니까 받아오는 데이터 없쥬
+        return productService.getProducts();
+    }
+
 }
