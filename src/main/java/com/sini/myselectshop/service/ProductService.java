@@ -4,6 +4,7 @@ import com.sini.myselectshop.dto.ProductMypriceRequestDto;
 import com.sini.myselectshop.dto.ProductRequestDto;
 import com.sini.myselectshop.dto.ProductResponseDto;
 import com.sini.myselectshop.entity.Product;
+import com.sini.myselectshop.naver.dto.ItemDto;
 import com.sini.myselectshop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -51,5 +52,11 @@ public class ProductService {
         }
 
         return responseDtoList;
+    }
+
+    @Transactional
+    public void updateBySearch(Long id, ItemDto itemDto) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new NullPointerException("해당 상품은 존대하지 않습니다."));
+        product.updateByItemDto(itemDto);
     }
 }
