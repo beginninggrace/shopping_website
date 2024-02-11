@@ -4,10 +4,10 @@ import com.sini.myselectshop.dto.ProductMypriceRequestDto;
 import com.sini.myselectshop.dto.ProductRequestDto;
 import com.sini.myselectshop.dto.ProductResponseDto;
 import com.sini.myselectshop.entity.Product;
+import com.sini.myselectshop.entity.User;
 import com.sini.myselectshop.naver.dto.ItemDto;
 import com.sini.myselectshop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +22,8 @@ public class ProductService {
 
     public static final int MIN_MY_PRICE = 100; //  이런 식으로 상수를 만들어서 제어해보겠음
 
-    public ProductResponseDto createProduct(ProductRequestDto requestDto) {
-        Product product = productRepository.save(new Product(requestDto)); // Product entity에 만들어져있던 생성자 그대로 request에 받아왔던게 담겨서 저장한 객체 product 선언
+    public ProductResponseDto createProduct(ProductRequestDto requestDto, User user) {
+        Product product = productRepository.save(new Product(requestDto, user)); // Product entity에 만들어져있던 생성자 그대로 request에 받아왔던게 담겨서 저장한 객체 product 선언
         return new ProductResponseDto(product);
     }
 
@@ -43,8 +43,8 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    public List<ProductResponseDto> getProducts() {
-        List<Product> productList = productRepository.findAll();
+    public List<ProductResponseDto> getProducts(User user) {
+        List<Product> productList = productRepository.findAllByUser(user);
         List<ProductResponseDto> responseDtoList = new ArrayList<>();
 
         for (Product product : productList) {
@@ -58,5 +58,15 @@ public class ProductService {
     public void updateBySearch(Long id, ItemDto itemDto) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NullPointerException("해당 상품은 존대하지 않습니다."));
         product.updateByItemDto(itemDto);
+    }
+
+    public List<ProductResponseDto> getAllProducts() {
+        List<Product> productList = productRepository.findAll();
+        List<ProductResponseDto> responseDtoList = new ArrayList<>();
+
+        for (Product product : productList) {
+            responseDtoList.add(new ProductResponseDto(product));
+        }
+        return responseDtoList;
     }
 }
