@@ -6,6 +6,7 @@ import com.sini.myselectshop.dto.ProductResponseDto;
 import com.sini.myselectshop.security.UserDetailsImpl;
 import com.sini.myselectshop.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,14 +30,15 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public List<ProductResponseDto> getProducts(@AuthenticationPrincipal UserDetailsImpl userDetails) { // 그냥 조회하는 거니까 받아오는 데이터 없쥬
-        return productService.getProducts(userDetails.getUser());
+    public Page<ProductResponseDto> getProducts(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) { // 그냥 조회하는 거니까 받아오는 데이터 없쥬
+        return productService.getProducts(userDetails.getUser(), page-1, size, sortBy, isAsc);
     }
 
-    // 관리자 조회
-    @GetMapping("/admin/products")
-    public List<ProductResponseDto> getAllProducts() {
-        return productService.getAllProducts();
-    }
+
 
 }
