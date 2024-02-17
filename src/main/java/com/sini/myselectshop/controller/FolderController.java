@@ -2,17 +2,29 @@ package com.sini.myselectshop.controller;
 
 import com.sini.myselectshop.dto.FolderRequestDto;
 import com.sini.myselectshop.security.UserDetailsImpl;
+import com.sini.myselectshop.service.FolderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@PostMapping("/folders")
-public void addFolders(@RequestBody FolderRequestDto folderRequestDto,
-                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+@RestController
+@RequestMapping("/api")
+@RequiredArgsConstructor
+public class FolderController {
 
-    List<String> folderNames = folderRequestDto.getFolderNames();
+    private final FolderService folderService;
 
-    folderService.addFolders(folderNames, userDetails.getUser());
+    @PostMapping("/folders")
+    public void addFolders(@RequestBody FolderRequestDto folderRequestDto,
+                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        List<String> folderNames = folderRequestDto.getFolderNames();
+
+        folderService.addFolders(folderNames, userDetails.getUser());
+    }
 }
