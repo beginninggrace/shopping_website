@@ -1,14 +1,12 @@
 package com.sini.myselectshop.controller;
 
 import com.sini.myselectshop.dto.FolderRequestDto;
+import com.sini.myselectshop.dto.FolderResponseDto;
 import com.sini.myselectshop.security.UserDetailsImpl;
 import com.sini.myselectshop.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +24,11 @@ public class FolderController {
         List<String> folderNames = folderRequestDto.getFolderNames();
 
         folderService.addFolders(folderNames, userDetails.getUser());
+    }
+
+    // 회원이 등록한 모든 폴더 조회
+    @GetMapping("/folders")
+    public List<FolderResponseDto> getFolders(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return folderService.getFolders(userDetails.getUser());
     }
 }
